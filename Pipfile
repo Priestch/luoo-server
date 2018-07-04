@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+peewee = "*"
+flask-restful = "*"
+flask-peewee = "*"
+
+[dev-packages]
+black = "*"
+pre-commit = "*"
+
+[requires]
+python_version = "3.6"
