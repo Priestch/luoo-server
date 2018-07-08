@@ -1,4 +1,9 @@
 [[source]]
+url = "http://pypi.doubanio.com/simple"
+verify_ssl = false
+name = "douban"
+
+[[source]]
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
@@ -8,10 +13,19 @@ flask = "*"
 peewee = "*"
 flask-restful = "*"
 flask-peewee = "*"
+"beautifulsoup4" = "*"
+lxml = "*"
+requests = "*"
+celery = {version = "*", extras = ["redis"]}
+user-agent = "*"
+"psycopg2-binary" = "*"
+alembic = "*"
+pyppeteer = "*"
 
 [dev-packages]
 black = "*"
 pre-commit = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.6"

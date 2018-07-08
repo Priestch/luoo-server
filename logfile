@@ -1,0 +1,15 @@
+2018-07-07 20:27:55.348 CST [22718] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2018-07-07 20:27:55.351 CST [22718] FATAL:  could not create lock file "/var/run/postgresql/.s.PGSQL.5432.lock": Permission denied
+2018-07-07 20:27:55.351 CST [22718] LOG:  database system is shut down
+2018-07-07 20:29:08.968 CST [22843] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2018-07-07 20:29:08.971 CST [22843] FATAL:  could not create lock file "/var/run/postgresql/.s.PGSQL.5432.lock": Permission denied
+2018-07-07 20:29:08.971 CST [22843] LOG:  database system is shut down
+2018-07-07 21:00:45.904 CST [24958] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2018-07-07 21:00:45.912 CST [24958] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2018-07-07 21:00:45.934 CST [24959] LOG:  database system was shut down at 2018-07-07 20:27:28 CST
+2018-07-07 21:00:45.944 CST [24958] LOG:  database system is ready to accept connections
+2018-07-07 23:00:55.301 CST [24958] LOG:  received fast shutdown request
+2018-07-07 23:00:55.307 CST [24958] LOG:  aborting any active transactions
+2018-07-07 23:00:55.319 CST [24958] LOG:  worker process: logical replication launcher (PID 24965) exited with exit code 1
+2018-07-07 23:00:55.320 CST [24960] LOG:  shutting down
+2018-07-07 23:00:55.353 CST [24958] LOG:  database system is shut down

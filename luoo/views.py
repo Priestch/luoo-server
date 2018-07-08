@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from . import app
+from . import flask_app
 
 
-@app.route("/")
+@flask_app.route("/")
 def hello_world():
     return "Hello World!"
