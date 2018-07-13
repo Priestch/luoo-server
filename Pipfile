@@ -10,9 +10,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
-peewee = "*"
 flask-restful = "*"
-flask-peewee = "*"
 "beautifulsoup4" = "*"
 lxml = "*"
 requests = "*"
@@ -21,6 +19,8 @@ user-agent = "*"
 "psycopg2-binary" = "*"
 alembic = "*"
 pyppeteer = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 black = "*"

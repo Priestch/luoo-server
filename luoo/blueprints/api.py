@@ -1,22 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, jsonify
+from flask import Blueprint
+from flask_restful import Api, Resource, fields, marshal_with
 
-# from flask_restful import Api
-
-# from luoo.resources import SongResource
+from luoo.models import Volume
 
 bp = Blueprint("api", __name__)
-# api = Api(api_bp)
 
-# api.add_resource(SongResource, "/songs/<int:song_id>")
-
-
-@bp.route("/songs/<song_id>")
-def get_song(song_id):
-    return jsonify({"id": song_id, "name": "test name"})
+api = Api(bp)
 
 
-# @bp.route("/volumes/<volume_id>")
-# def get_song(volume_id):
-#     return jsonify({"id": volume_id, "name": "test name"})
+volume_fields = {
+    "id": fields.Integer,
+    "name": fields.String,
+    "description": fields.List(fields.String),
+    "vol_number": fields.String,
+    "author_id": fields.Integer,
+    "prev": fields.Integer,
+    "next": fields.Integer,
+    "cover_url": fields.String,
+}
+
+
+class VolumeResource(Resource):
+    @marshal_with(volume_fields)
+    def get(self, volume_id):
+        volume = Volume.query.get_or_404(volume_id)
+        return volume
+
+
+api.add_resource(VolumeResource, "/volumes/<int:volume_id>")

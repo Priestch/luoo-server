@@ -4,10 +4,9 @@ from subprocess import call
 import click
 from flask import Flask
 from flask.cli import AppGroup
-from flask_peewee.db import Database
 
 from luoo import config
-from luoo.blueprints.api import bp
+from luoo.models import db
 
 
 def configure_app_by_env(app):
@@ -19,14 +18,20 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config)
     configure_app_by_env(app)
-    app.db = Database(app)
 
-    app.register_blueprint(bp, url_prefix="/api")
+    db.init_app(app)
 
     return app
 
 
+def register_blueprints():
+    from luoo.blueprints.api import bp
+
+    flask_app.register_blueprint(bp, url_prefix="/api")
+
+
 flask_app = create_app()
+register_blueprints()
 
 db_cli = AppGroup("db")
 crawler_cli = AppGroup("crawler")

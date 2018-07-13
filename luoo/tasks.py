@@ -4,12 +4,11 @@ import datetime
 import re
 
 from bs4 import BeautifulSoup, NavigableString, Tag as bsTag
-from peewee import DoesNotExist
 
-from luoo.models import Volume, VolumeTag, VolumeAuthor, Tag
+from luoo.models import Volume, VolumeAuthor, Tag
 from .http import get
 from .celery import app
-from . import flask_app
+from . import flask_app, db
 
 
 volume_url_pattern = re.compile("vol/index/(\d+)$")
@@ -146,23 +145,19 @@ def crawl_volume_songs(volume_url):
     volume_page = VolumePage(volume_url)
     volume_page.start_crawl()
 
-    with flask_app.db.database.atomic():
-        volume = Volume.create(**volume_page.volume)
-        tag_aliases = []
+    with flask_app.app_context():
+        author = VolumeAuthor.query.get(volume_page.author["id"])
+        if author is None:
+            author = VolumeAuthor(**volume_page.author)
+            db.session.add(author)
+        db.session.add(author)
+        volume = Volume(**volume_page.volume)
+        db.session.add(volume)
         for item in volume_page.tags:
-            tag_exists = True
-            try:
-                Tag.get(Tag.alias == item["alias"])
-            except DoesNotExist:
-                tag_exists = False
-            if not tag_exists:
-                tag = Tag.create(**item)
-                tag_aliases.append(tag.alias)
+            tag = Tag.query.filter_by(alias=item["alias"]).first()
+            if tag is None:
+                tag = Tag(**item)
+                volume.tags.append(tag)
 
-        for alias in tag_aliases:
-            tag = Tag.get(Tag.alias == alias)
-            VolumeTag.create(volume=volume, tag=tag)
-        try:
-            VolumeAuthor.get_by_id(volume_page.author["id"])
-        except DoesNotExist:
-            VolumeAuthor.create(**volume_page.author)
+        print(author, volume)
+        db.session.commit()

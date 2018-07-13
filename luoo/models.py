@@ -1,43 +1,60 @@
-from playhouse.postgres_ext import *
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
 
-from luoo import flask_app
+from luoo.constants import LUOO_CDN_BASE, LUOO_VOLUME_PIC_PREFIX, LUOO_VOLUME_PIC_SUFFIX
 
+convention = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s",
+}
 
-class BaseModel(Model):
-    class Meta:
-        database = flask_app.db.database
-        legacy_table_names = False
+metadata = MetaData(naming_convention=convention)
+db = SQLAlchemy(metadata=metadata)
 
-
-class Volume(BaseModel):
-    id = IntegerField(primary_key=True)
-    name = CharField(max_length=255)
-    description = ArrayField(TextField)
-    vol_number = CharField(max_length=255)
-    author_id = IntegerField(null=False)
-    prev = IntegerField(null=False)
-    next = IntegerField(null=True)
-    cover = CharField(max_length=600)
-    created_at = DateTimeField()
-
-
-class SimilarVolume(BaseModel):
-    query = ForeignKeyField(Volume)
-    refer = ForeignKeyField(Volume)
+volume_tag = db.Table(
+    "volume_tag",
+    db.metadata,
+    db.Column("volume_id", db.Integer, db.ForeignKey("volume.id")),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id")),
+)
 
 
-class VolumeAuthor(BaseModel):
-    id = IntegerField(primary_key=True)
-    name = CharField(max_length=255)
-    avatar = CharField(max_length=255)
+class Volume(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    name = db.Column(db.Text)
+    description = db.Column(db.ARRAY(db.Text))
+    vol_number = db.Column(db.Text)
+    author_id = db.Column(db.Integer, db.ForeignKey("volume_author.id"), nullable=False)
+    prev = db.Column(db.Integer, nullable=False)
+    next = db.Column(db.Integer, nullable=False)
+    cover = db.Column(db.Text)
+    created_at = db.Column(db.DateTime)
+
+    tags = db.relationship("Tag", secondary=volume_tag, backref="volumes")
+    author = db.relationship("VolumeAuthor", uselist=False)
+
+    @property
+    def cover_url(self):
+        return "{}{}{}{}".format(
+            LUOO_CDN_BASE, LUOO_VOLUME_PIC_PREFIX, self.cover, LUOO_VOLUME_PIC_SUFFIX
+        )
 
 
-class Tag(BaseModel):
-    id = IntegerField(primary_key=True)
-    name = CharField(max_length=255)
-    alias = CharField(max_length=255)
+# class SimilarVolume(db.Model):
+#     query = ForeignKeyField(Volume)
+#     refer = ForeignKeyField(Volume)
 
 
-class VolumeTag(BaseModel):
-    volume = ForeignKeyField(Volume, backref="tags")
-    tag = ForeignKeyField(Tag, backref="volumes")
+class VolumeAuthor(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    name = db.Column(db.Text, nullable=False)
+    avatar = db.Column(db.Text)
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text)
+    alias = db.Column(db.Text, nullable=False)

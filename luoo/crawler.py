@@ -61,7 +61,7 @@ def collect_pages():
 
 def main():
     volume_urls = collect_volume_urls_from_pages()
-    for volume_url in volume_urls[:10]:
+    for volume_url in volume_urls[:30]:
         countdown = random_timeout()
         crawl_volume_songs.apply_async((volume_url,), countdown=countdown)
 
