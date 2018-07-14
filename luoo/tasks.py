@@ -156,5 +156,4 @@ def crawl_volume_songs(volume_url):
             tag = Tag(**item)
             volume.tags.append(tag)
 
-    print(author, volume)
     db.session.commit()

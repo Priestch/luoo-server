@@ -38,10 +38,10 @@ def crawl_page_volume_urls(volume_page):
     return [volume.attrs["href"] for volume in volume_list]
 
 
-def collect_volume_urls_from_pages():
+def collect_volume_urls_from_pages(limit_to):
     pages = collect_pages()
     volume_urls = []
-    for page in pages[:1]:
+    for page in pages[:limit_to]:
         volume_urls.extend(crawl_page_volume_urls(page))
     return volume_urls
 
@@ -60,7 +60,7 @@ def collect_pages():
 
 
 def main():
-    volume_urls = collect_volume_urls_from_pages()
+    volume_urls = collect_volume_urls_from_pages(3)
     for volume_url in volume_urls[:30]:
         countdown = random_timeout()
         crawl_volume_songs.apply_async((volume_url,), countdown=countdown)
