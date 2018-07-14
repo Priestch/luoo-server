@@ -6,10 +6,8 @@ import re
 from bs4 import BeautifulSoup, NavigableString, Tag as bsTag
 
 from luoo.models import Volume, VolumeAuthor, Tag
+from . import db, celery
 from .http import get
-from .celery import app
-from . import flask_app, db
-
 
 volume_url_pattern = re.compile("vol/index/(\d+)$")
 volume_cover_pattern = re.compile("pics/vol/(.+?)!/fwfh/640x452$")
@@ -140,24 +138,23 @@ class VolumePage:
         return tags
 
 
-@app.task
+@celery.task
 def crawl_volume_songs(volume_url):
     volume_page = VolumePage(volume_url)
     volume_page.start_crawl()
 
-    with flask_app.app_context():
-        author = VolumeAuthor.query.get(volume_page.author["id"])
-        if author is None:
-            author = VolumeAuthor(**volume_page.author)
-            db.session.add(author)
+    author = VolumeAuthor.query.get(volume_page.author["id"])
+    if author is None:
+        author = VolumeAuthor(**volume_page.author)
         db.session.add(author)
-        volume = Volume(**volume_page.volume)
-        db.session.add(volume)
-        for item in volume_page.tags:
-            tag = Tag.query.filter_by(alias=item["alias"]).first()
-            if tag is None:
-                tag = Tag(**item)
-                volume.tags.append(tag)
+    db.session.add(author)
+    volume = Volume(**volume_page.volume)
+    db.session.add(volume)
+    for item in volume_page.tags:
+        tag = Tag.query.filter_by(alias=item["alias"]).first()
+        if tag is None:
+            tag = Tag(**item)
+            volume.tags.append(tag)
 
-        print(author, volume)
-        db.session.commit()
+    print(author, volume)
+    db.session.commit()

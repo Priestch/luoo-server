@@ -6,6 +6,7 @@ from flask import Flask
 from flask.cli import AppGroup
 
 from luoo import config
+from luoo.celery import make_celery
 from luoo.models import db
 
 
@@ -31,6 +32,7 @@ def register_blueprints():
 
 
 flask_app = create_app()
+celery = make_celery(flask_app)
 register_blueprints()
 
 db_cli = AppGroup("db")
