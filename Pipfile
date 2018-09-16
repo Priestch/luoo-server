@@ -21,11 +21,15 @@ alembic = "*"
 pyppeteer = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"
+marshmallow = "*"
 
 [dev-packages]
-black = "*"
 pre-commit = "*"
 ipython = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true

@@ -32,7 +32,7 @@ def parse_author_id(url):
 
 
 def parse_tag_name(url):
-    result = author_pattern.search(url)
+    result = volume_tag_pattern.search(url)
     if result is not None:
         return result.groups()[0]
     return ""

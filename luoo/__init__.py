@@ -26,9 +26,9 @@ def create_app():
 
 
 def register_blueprints():
-    from luoo.blueprints.api import bp
+    from luoo.api import api_bp
 
-    flask_app.register_blueprint(bp, url_prefix="/api")
+    flask_app.register_blueprint(api_bp, url_prefix="/api")
 
 
 flask_app = create_app()
