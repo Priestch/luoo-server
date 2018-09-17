@@ -15,12 +15,22 @@ def configure_app_by_env(app):
     app.config.from_pyfile("{}.py".format(flask_env))
 
 
+def handle_non_exist_request(e):
+    return "Page not Found!", 404
+
+
+def register_error_handler(app):
+    app.register_error_handler(404, handle_non_exist_request)
+
+
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config)
     configure_app_by_env(app)
 
     db.init_app(app)
+
+    register_error_handler(app)
 
     return app
 

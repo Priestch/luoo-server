@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import jsonify
+from flask import jsonify, request
 
+from luoo.api.response_handler import error
+from luoo.forms import VolumeForm
 from luoo.models import Volume, Tag
 from . import api_bp
 from luoo.schema.volume import volume_schema, tag_schema
@@ -15,8 +17,13 @@ def get_volume(volume_id):
 
 @api_bp.route("/volumes")
 def get_volumes():
-    volumes = Volume.query.all()
-    dumped = volume_schema.dump(volumes, many=True)
+    form = VolumeForm.from_request_args(request.args)
+    if not form.validate():
+        error(form.errors)
+    volume_pagination = Volume.query.paginate(
+        page=form.data["page"], per_page=form.data["page_size"]
+    )
+    dumped = volume_schema.dump(volume_pagination.items, many=True)
     return jsonify(dumped)
 
 

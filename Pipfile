@@ -22,6 +22,9 @@ pyppeteer = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"
 marshmallow = "*"
+flask-wtf = "*"
+wtforms = "*"
+simplejson = "*"
 
 [dev-packages]
 pre-commit = "*"
