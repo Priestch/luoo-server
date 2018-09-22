@@ -11,7 +11,7 @@ class BaseForm(FlaskForm):
 
 class PaginationForm(BaseForm):
     page = IntegerField("Page", validators=[DataRequired()])
-    page_size = IntegerField("Page Size", validators=[DataRequired()], default=20)
+    per_page = IntegerField("Page Size", validators=[DataRequired()], default=20)
 
 
 class VolumeForm(PaginationForm):

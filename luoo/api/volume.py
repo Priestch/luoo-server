@@ -8,6 +8,15 @@ from . import api_bp
 from luoo.schema.volume import volume_schema, tag_schema
 
 
+def get_pagination_props(pagination):
+    return {
+        "total": pagination.total,
+        "pages": pagination.pages,
+        "page": pagination.page,
+        "per_page": pagination.per_page,
+    }
+
+
 @api_bp.route("/volumes/<int:volume_id>")
 def get_volume(volume_id):
     volume = Volume.query.get_or_404(volume_id)
@@ -21,10 +30,11 @@ def get_volumes():
     if not form.validate():
         error(form.errors)
     volume_pagination = Volume.query.paginate(
-        page=form.data["page"], per_page=form.data["page_size"]
+        page=form.data["page"], per_page=form.data["per_page"]
     )
-    dumped = volume_schema.dump(volume_pagination.items, many=True)
-    return jsonify(dumped)
+    data = get_pagination_props(volume_pagination)
+    data["items"] = volume_schema.dump(volume_pagination.items, many=True)
+    return jsonify(data)
 
 
 @api_bp.route("/tags")
