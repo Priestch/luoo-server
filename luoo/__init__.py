@@ -37,8 +37,10 @@ def create_app():
 
 def register_blueprints():
     from luoo.api import api_bp
+    from luoo.views import views
 
     flask_app.register_blueprint(api_bp, url_prefix="/api")
+    flask_app.register_blueprint(views, url_prefix="/")
 
 
 flask_app = create_app()

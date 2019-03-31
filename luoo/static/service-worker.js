@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.1/workbox-sw.js");
 
 importScripts(
-  "/static/precache-manifest.b5edd74d7be8c5a671632cf4d2901ed9.js"
+  "/static/precache-manifest.883505bd2649d0c3a76876def04647f5.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "luoo-pwa"});

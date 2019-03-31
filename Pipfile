@@ -1,6 +1,6 @@
 [[source]]
-url = "http://pypi.doubanio.com/simple"
-verify_ssl = false
+url = "https://pypi.doubanio.com/simple"
+verify_ssl = true
 name = "douban"
 
 [[source]]
